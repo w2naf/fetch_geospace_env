@@ -3,6 +3,7 @@ import datetime
 import numpy as np
 import pandas as pd
 from collections import OrderedDict
+import bz2
 
 #year,doy,hr,B_nT,Bx_GSE_nT,By_GSM_nT,Bz_GSM_nT,T_K,P,V,Kp_x10,R,Dst_nT,Ap_nT,F10.7,AE,AL,AU,Pc,Lyman_alpha
 #year,doy,hr,P,V,Kp_x10,R,Dst_nT,Ap_nT,F10.7,AE,AL,AU,Pc,Lyman_alpha
@@ -77,8 +78,14 @@ def date_parser(row):
 def load_pandas(input_file):
 
     # Open File
-    with open(input_file) as fl:
-        lines   = fl.readlines()
+    if input_file[-4:] == '.bz2':
+        with bz2.BZ2File(input_file) as fl:
+            lines   = fl.readlines()
+        lines   = [x.decode() for x in lines]
+
+    else:
+        with open(input_file) as fl:
+            lines   = fl.readlines()
     
     # Pull out data, ignore headers and footers.
     data    = []
@@ -132,5 +139,5 @@ def load_pandas(input_file):
     return df
     
 if __name__ == '__main__':
-    input_file  = 'omni_data.txt'
+    input_file  = 'omni_data.txt.bz2'
     df          = load_pandas(input_file)
