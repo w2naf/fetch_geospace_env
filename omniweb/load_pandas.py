@@ -139,5 +139,5 @@ def load_pandas(input_file):
     return df
     
 if __name__ == '__main__':
-    input_file  = 'omni_data.txt.bz2'
+    input_file  = 'omni_data.txt'
     df          = load_pandas(input_file)
